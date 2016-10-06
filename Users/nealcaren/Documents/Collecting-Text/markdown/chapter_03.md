@@ -971,11 +971,15 @@ print len(chapel_hill_restaurants['businesses'])
 
 Additionally, they cap the total number of business the search will return at 40 and only provide 20 results for each API call.
 
-Even with these restrictions, it still might be useful for social science research. As before, you would likely want to define a function in order to make repeated calls to the API.
+Even with these restrictions, it still might be useful for social science research. As before, you would likely want to define a function in order to make repeated calls to the API. In this, the easier solution might be to create two functions. One that gets a single page and another which retrieves both pages for a single geographical area by calling the first function twice. While it would be possible to do this with zero or one new functions, creating two functions allows for better control over finding and debugging errors since you can test each function independently. Creating lots of small functions generally the code more readable, especially in case like this where you are looping over pages within restaurants within geographic areas. In general, I think the principle of a workflow consisting of small functions, as is commonly found in Python code, is something that social scientists should adopt even when they aren't writing Python.
 
 
 ```
 def get_yelp_page(location, offset):
+    '''
+    Retrieve one page of results from the Yelp API
+    Returns a JSON file
+    '''
     # from https://github.com/Yelp/yelp-api/tree/master/v2/python
     consumer_key    = 'qDBPo9c_szHVrZwxzo-zDw'
     consumer_secret = '4we8Jz9rq5J3j15Z5yCUqmgDJjM'
@@ -1001,8 +1005,12 @@ def get_yelp_page(location, offset):
     return resp.json()
 
 def get_yelp_results(location):
+    '''
+    Retrive both pages of results from the Yelp API
+    Returns a dataframe
+    '''
     df = pd.DataFrame()
-    for offset in [0,21]:
+    for offset in [1,21]:
         results = get_yelp_page(location, offset)
         new_df = pd.DataFrame(results['businesses'])
         df = df.append(new_df , ignore_index=True)
@@ -1011,13 +1019,327 @@ def get_yelp_results(location):
 
 
 ```
-get_yelp_results('10014')['rating'].mean()
+ch_df = get_yelp_results('Chapel Hill, NC')
+
+print len(ch_df)
+```
+
+    39
+
+
+
+```
+ch_df.keys()
 ```
 
 
 
 
-    4.243589743589744
+    Index([u'categories', u'display_phone', u'id', u'image_url', u'is_claimed',
+           u'is_closed', u'location', u'menu_date_updated', u'menu_provider',
+           u'mobile_url', u'name', u'phone', u'rating', u'rating_img_url',
+           u'rating_img_url_large', u'rating_img_url_small', u'review_count',
+           u'snippet_image_url', u'snippet_text', u'url'],
+          dtype='object')
+
+
+
+
+```
+ch_df[['name','categories','review_count','rating']].sort_values(by='rating', ascending=False)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>categories</th>
+      <th>review_count</th>
+      <th>rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>Khushi Salads &amp; Wraps</td>
+      <td>[[Salad, salad], [Indian, indpak], [Vegan, veg...</td>
+      <td>16</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>Tarantini</td>
+      <td>[[Italian, italian]]</td>
+      <td>67</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Imbibe</td>
+      <td>[[American (New), newamerican], [Wine Bars, wi...</td>
+      <td>15</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Al's Burger Shack</td>
+      <td>[[Burgers, burgers]]</td>
+      <td>257</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Merritt's Store &amp; Grill</td>
+      <td>[[Sandwiches, sandwiches], [Convenience Stores...</td>
+      <td>219</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Sunrise Biscuit Kitchen</td>
+      <td>[[Breakfast &amp; Brunch, breakfast_brunch]]</td>
+      <td>445</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Mediterranean Deli</td>
+      <td>[[Greek, greek], [Mediterranean, mediterranean...</td>
+      <td>549</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Great Harvest Bread Co</td>
+      <td>[[Sandwiches, sandwiches], [Bakeries, bakeries]]</td>
+      <td>30</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Elements</td>
+      <td>[[Asian Fusion, asianfusion], [American (New),...</td>
+      <td>97</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>Olio &amp; Aceto Cafe</td>
+      <td>[[Cafes, cafes]]</td>
+      <td>30</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Rasa Malaysia</td>
+      <td>[[Malaysian, malaysian]]</td>
+      <td>29</td>
+      <td>4.5</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>The Root Cellar Cafe and Catering</td>
+      <td>[[Breakfast &amp; Brunch, breakfast_brunch], [Cafe...</td>
+      <td>77</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Tobacco Road Sports Cafe</td>
+      <td>[[American (New), newamerican], [Sports Bars, ...</td>
+      <td>76</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Bin 54 Steak and Cellar</td>
+      <td>[[Steakhouses, steak]]</td>
+      <td>121</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Jujube</td>
+      <td>[[Asian Fusion, asianfusion]]</td>
+      <td>148</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Il Palio</td>
+      <td>[[Italian, italian]]</td>
+      <td>99</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>Sage Café</td>
+      <td>[[Vegetarian, vegetarian], [Vegan, vegan], [Gl...</td>
+      <td>110</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>The Pig</td>
+      <td>[[Barbeque, bbq]]</td>
+      <td>268</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Bangkok 54</td>
+      <td>[[Thai, thai]]</td>
+      <td>139</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Kitchen</td>
+      <td>[[French, french]]</td>
+      <td>155</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Buns</td>
+      <td>[[Burgers, burgers], [Hot Dogs, hotdog]]</td>
+      <td>280</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Lucha Tigre</td>
+      <td>[[Asian Fusion, asianfusion], [Mexican, mexican]]</td>
+      <td>210</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Toppers Pizza</td>
+      <td>[[Chicken Wings, chicken_wings], [Pizza, pizza]]</td>
+      <td>30</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R &amp; R Grill</td>
+      <td>[[American (Traditional), tradamerican], [Burg...</td>
+      <td>84</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Roots</td>
+      <td>[[Breakfast &amp; Brunch, breakfast_brunch], [New ...</td>
+      <td>28</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Ms. Mong</td>
+      <td>[[Mongolian, mongolian], [Asian Fusion, asianf...</td>
+      <td>101</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Linda's Bar and Grill</td>
+      <td>[[American (Traditional), tradamerican], [Cock...</td>
+      <td>111</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>TRU Deli &amp; Wine</td>
+      <td>[[Delis, delis], [Sandwiches, sandwiches], [Co...</td>
+      <td>86</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Cholanad</td>
+      <td>[[Indian, indpak], [Vegan, vegan]]</td>
+      <td>231</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Sandwhich</td>
+      <td>[[Sandwiches, sandwiches], [American (New), ne...</td>
+      <td>237</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Lantern</td>
+      <td>[[Asian Fusion, asianfusion], [Bars, bars], [V...</td>
+      <td>290</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Elaine's On Franklin</td>
+      <td>[[American (New), newamerican]]</td>
+      <td>123</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Talullas</td>
+      <td>[[Middle Eastern, mideastern], [Turkish, turki...</td>
+      <td>162</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Kipos Greek Taverna</td>
+      <td>[[Greek, greek]]</td>
+      <td>209</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>City Kitchen</td>
+      <td>[[American (New), newamerican]]</td>
+      <td>162</td>
+      <td>3.5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Cosmic Cantina</td>
+      <td>[[Mexican, mexican], [Vegan, vegan], [Tex-Mex,...</td>
+      <td>91</td>
+      <td>3.5</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Lime and Basil</td>
+      <td>[[Vietnamese, vietnamese]]</td>
+      <td>186</td>
+      <td>3.5</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Mixed Casual Korean Bistro</td>
+      <td>[[Korean, korean], [Asian Fusion, asianfusion]]</td>
+      <td>162</td>
+      <td>3.5</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Crook's Corner</td>
+      <td>[[Southern, southern], [Breakfast &amp; Brunch, br...</td>
+      <td>181</td>
+      <td>3.5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
 
@@ -1050,6 +1372,18 @@ beverly_hills_restaurants = get_yelp_businesses('90210')
 for business in beverly_hills_restaurants['businesses']:
     print '%s - %s (%s)' % (business['rating'], business['name'], business['review_count'])
 ```
+
+
+```
+pwd
+```
+
+
+
+
+    u'/Users/nealcaren/Documents/Collecting-Text'
+
+
 
 
 ```
