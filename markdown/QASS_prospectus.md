@@ -34,28 +34,28 @@ Several books are currently available that
 	
 ###Table of Contents
 
-1. **Collecting Text**  
+1. **Collecting Text**  (10 pages)
     The first chapter will highlight recent, interesting and exciting work that scholars have done with text. It will provide an overview of the major sources of textual data. Finally, it will include a preview of the book chapters and explain why scholars should work with the Python computing language. 
      
-2. **Importing and working with text**  
+2. **Importing and working with text**  (20 pages)
 	This brief chapter will provide an introduction to working with text. This includes reading text locally from a CSV file, a single text file, or an entire directory. It will also introduce basic text manipulations and text encodings. Finally, it will explain how to save text data for later use in Python or in statistical packages. 
 	
-3. **APIs: When they Want to give you the data.**
+3. **APIs: When they Want to give you the data.** (20 pages)
 	Web application programming interfaces (APIs) are a popular method for providing information over the web. This chapter will introduce APIs along with the basic methods for making APIs calls. I will also cover the major ways that data are provided through APIs, including JSON and XML file formats. Finally, I will give examples of more complex API calls, including authentication and streaming data.  
  
-4. **Scraping Web Pages**  
+4. **Scraping Web Pages**  (25 pages)
 	This chapter introduces the basics of scraping data from web pages. This includes an introduction to the structure of modern web pages, including HTML and CSS. The chapter will introduce scraping data from tables and by HTML tags. It will also cover techniques for uncovering which URL has the data of interest, looping over multiple pages, and best practices for saving and exporting the data. 
 
-5. **Advanced Scraping techniques**  
+5. **Advanced Scraping techniques**   (25 pages)
 	This chapter expands on the previous chapter to introduce a number of ways to scrape more complicated pages and create a more robust scraping code. This includes handling cookies, redirects, header spoofing, POSTing, and authenticating. Additionally, I will cover ways to find the data when it missing from the HTML and ways to make code robust to the variety of errors likely to occur.
 	
-6. **Other Sources of Data**
+6. **Other Sources of Data** (15 pages)
 	Text data can also be imported from non-web sources, such as PDFs and Microsoft Word documents. This chapter discusses techniques for importing text from DOCX and PDF files, including optical character reading (OCRing). It also reviews ways to batch process documents. 
 	
-6. **Ethics, Method and Reproducibility**  
+6. **Ethics, Method and Reproducibility** (20 pages)
 	The final chapter will review the ethical and legal issues associated with web scraping. This includes API agreements, robots.txt files, along with the rights of publishers and writers. It will also discuss when IRB approval is likely.  The chapter will also review important methodological questions scholars need to think about, including the data generating process, sampling and case selection. Finally, the chapter will review best practices for making the code and data accessible to other scholars.  
 
-    **Appendix. Basics of installing and working with Python***  
+    **Appendix. Basics of installing and working with Python** (10 Pages)  
     A short appendix details the ways to install and update Python, including all the requisite python libraries. It will also provide a quick introduction to the Python programming language.  
 
 
