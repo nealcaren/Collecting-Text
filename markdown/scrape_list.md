@@ -1,4 +1,6 @@
+<head>
 <title>"My list of sociology journals"</title>
+</head>
 
 ## Sociology Journals
 
