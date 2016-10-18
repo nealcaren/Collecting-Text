@@ -2,8 +2,8 @@
 <title>"My list of sociology journals"</title>
 </head>
 
-<div title='journals'>
-## Sociology Journals
+<div class "journals">
+<h1>Sociology Journals</h1>
 
 <ul>
 <li><a href="http://asr.sagepub.com">American Sociological Review</a></li>
@@ -14,10 +14,12 @@
 
 </div>
 
-<div title='contact'>
+<div class="contact">
+<h1>Contact Information</h1>
 
 <ul>
 <li><a href="mailto:neal.caren@unc.edu">email</a></li>
+<li><a href="http://nealcaren.unc.edu">website</a></li>
 </ul>
 
 
