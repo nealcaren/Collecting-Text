@@ -9,7 +9,7 @@
 * Social Problems
 
 
-<div class="poli_scie">
+</div><div class="poli_scie">
 
 ## Political Science 
 * American Political Science Review
