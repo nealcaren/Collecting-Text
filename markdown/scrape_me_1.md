@@ -2,18 +2,21 @@
 <div class="sociology">
 
 
-## Sociology
-* American Sociological Review
-* American Journal of Sociology
-* Social Forces
-* Social Problems
+<h2> Sociology </h2>
+<ul>
+<li> American Sociological Review
+<li> American Journal of Sociology
+<li> Social Forces
+<li> Social Problems
+</ul>
+</div>
 
-
-</div><div class="poli_scie">
-
-## Political Science 
-* American Political Science Review
-* Journal of Politics
-* American Politics Research
-* European Political Science Review
-* 
+<div class="poli_scie">
+<h2>  Political Science  </h2>
+<ul>
+<li> American Political Science Review
+<li> Journal of Politics
+<li> American Politics Research
+<li> European Political Science Review
+</ul>
+</div>
