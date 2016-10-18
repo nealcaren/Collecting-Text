@@ -2,7 +2,7 @@
 <title>"My list of sociology journals"</title>
 </head>
 
-<div class = "journals">
+<div class="journals">
 <h1>Sociology Journals</h1>
 
 <ul>
