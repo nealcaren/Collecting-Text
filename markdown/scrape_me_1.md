@@ -2,10 +2,10 @@
 
 ## Sociology
 
-* American Sociological Review
-* American Journal of Sociology
+* [American Sociological Review](http://asr.sagepub.com)
+* [American Journal of Sociology](http://www.journals.uchicago.edu/toc/ajs/current)
 * [Social Forces](https://sf.oxfordjournals.org)
-* Social Problems
+* [Social Problems](http://socpro.oxfordjournals.org)
 
 
 
