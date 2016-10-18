@@ -1,6 +1,6 @@
 <title>"My list of sociology journals"</title>
 
-## Sociology
+## Sociology Journals
 
 * [American Sociological Review](http://asr.sagepub.com)
 * [American Journal of Sociology](http://www.journals.uchicago.edu/toc/ajs/current)
