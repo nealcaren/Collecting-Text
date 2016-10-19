@@ -32,14 +32,14 @@ http://chroniclingamerica.loc.gov/search/pages/results/?andtext=slavery&format=j
 [``requests``](http://docs.python-requests.org/en/master/) is a useful and commonly used HTTP library for python. It is not a part of the default installation, but is included with Anaconda Python Distribution. 
 
 
-```
+```python
 import requests
 ```
 
 It would be possible to use the API URL and parameters directly in the requests command, but since the most likely scenario involves making repeating calls to ``requests`` as part of a loop -- the search returned less than 1% of the results -- I store the strings first. 
 
 
-```
+```python
 base_url = 'http://chroniclingamerica.loc.gov/search/pages/results/'
 parameters = '?andtext=slavery&format=json'
 ```
@@ -47,21 +47,21 @@ parameters = '?andtext=slavery&format=json'
 `requests.get()` is used for both accessing websites and APIs. The command can be modified by several arguements, but at a minimum, it requires the URL.
 
 
-```
+```python
 r = requests.get(base_url + parameters)
 ```
 
 `r` is a `requests` response object. Any JSON returned by the server are stored in `.json().`
 
 
-```
+```python
 search_json = r.json()
 ```
 
 JSONs are dictionary like objects, in that they have keys (think variable names) and values. `.keys()` returns a list of the keys.
 
 
-```
+```python
 print search_json.keys()
 ```
 
@@ -71,7 +71,7 @@ print search_json.keys()
 You can return the value of any key by putting the key name in brackets.
 
 
-```
+```python
 search_json['totalItems']
 ```
 
@@ -87,7 +87,7 @@ As is often the case with results from an API, most of the keys and values are m
 The data I'm intereted in is all in `items`. 
 
 
-```
+```python
 print type(search_json['items'])
 print len(search_json['items'])
 ```
@@ -99,7 +99,7 @@ print len(search_json['items'])
 `items` is a list with 20 items.
 
 
-```
+```python
 print type(search_json['items'][0])
 print type(search_json['items'][19])
 ```
@@ -111,7 +111,7 @@ print type(search_json['items'][19])
 Each of the 20 items in the list is a dictionary. 
 
 
-```
+```python
 first_item = search_json['items'][0]
 
 print first_item.keys()
@@ -125,7 +125,7 @@ While a standard CSV file has a header row that describes the contents of each c
 As before, we can examine the contents of a particular item, such as the publication's `title`.
 
 
-```
+```python
 print first_item['title']
 ```
 
@@ -135,7 +135,7 @@ print first_item['title']
 The easiest way to view or analyze this data is to convert it to a dataset-like structure. While Python does not have a builting in dataframe type, the popular `pandas` library does. By convention, it is imported as `pd`.
 
 
-```
+```python
 import pandas as pd
 
 # Make sure all columns are displayed
@@ -145,7 +145,7 @@ pd.set_option("display.max_columns",101)
 pandas is prety smart about importing different JSON-type objects and converting them to dataframes with its `.DataFrame()` function.
 
 
-```
+```python
 df = pd.DataFrame(search_json['items'])
 
 df.head(10)
@@ -511,7 +511,7 @@ Note that I converted `search_json['items']` to  dataframe and not the entire JS
 If this dataframe contained all the items that you were looking for, it would be easy to save this to a csv file for storage and later analysis.
 
 
-```
+```python
 df.to_csv('lynching_articles.csv')
 ```
 
@@ -523,7 +523,7 @@ Looking at the API guidelines, there is an additional paramater `page` that tell
 Before creating the loop and making multiple calls to the API, I want to make sure that the API is working the way I think it is. 
 
 
-```
+```python
 base_url = 'http://chroniclingamerica.loc.gov/search/pages/results/'
 parameters = '?andtext=slavery&format=json&page=3'
 r = requests.get(base_url + parameters)
@@ -542,7 +542,7 @@ A call to random selected page 3 returns results 41 through 60, which is what I 
 The parameters are getting pretty ugly, so fortunately `requests` accepts a dictionary where the keys are the parameter names as defined by the API and the values are the search paramaters you are looking for. So the same request can be rewritten:
 
 
-```
+```python
 base_url = 'http://chroniclingamerica.loc.gov/search/pages/results/'
 parameters = {'andtext': 'lynching',
               'page' : 3,
@@ -562,7 +562,7 @@ print results['endIndex']
 This can be rewritten as function:
 
 
-```
+```python
 def get_articles():
     '''
     Make calls to the Chronicling America API.
@@ -577,7 +577,7 @@ def get_articles():
 ```
 
 
-```
+```python
 results = get_articles()
 
 print results['startIndex']
@@ -591,7 +591,7 @@ print results['endIndex']
 The advantage of writing a function, however, would be that you can pass along your own parameters, such as the search term and page number, which would make this much more useful. 
 
 
-```
+```python
 def get_articles(search_term, page_number):
     '''
     Make calls to the Chronicling America API.
@@ -606,7 +606,7 @@ def get_articles(search_term, page_number):
 ```
 
 
-```
+```python
 results = get_articles('lynching', 3)
 
 print results['startIndex']
@@ -620,7 +620,7 @@ print results['endIndex']
 Now, the first 60 results could downloaded in a just a few lines:
 
 
-```
+```python
 for page_number in range(1,4): # range stops before it gets to the last number
     results = get_articles('lynching', page_number)
     print results['startIndex'], results['endIndex']
@@ -635,7 +635,7 @@ for page_number in range(1,4): # range stops before it gets to the last number
 Everything appears to be working, but unfortunately I only have the last page of results still. Each call to the API was redefining `results` variable. In this case, I set up an empty dataframe to store the results and will append the items from each page of results.
 
 
-```
+```python
 df = pd.DataFrame()
 
 for page_number in range(1,4):
@@ -864,7 +864,7 @@ Using the Yelp API goes something like this. First, you tell Yelp who you are an
 Yelp uses the OAuth protocol for authentication. There are several python libraries for handling this, but you will likely need to install one (via `conda` or `pip`) yourself first.
 
 
-```
+```python
 import oauth2
 ```
 
@@ -874,7 +874,7 @@ There's no module to install for the Yelp API, but Yelp does provide some [sampl
 
 
 
-```
+```python
 consumer_key    = 'qDBPo9c_szHVrZwxzo-zDw'
 consumer_secret = '4we8Jz9rq5J3j15Z5yCUqmgDJjM'
 token           = 'jeRrhRey_k-emvC_VFLGrlVHrkR4P3UF'
@@ -906,7 +906,7 @@ print signed_url
 The URL returned expires after a couple of seconds, so don't expect for the above link to work. The results are provided in the JSON file format, so I'm going to use the already imported `requests` module to download them.
 
 
-```
+```python
 resp = requests.get(url=signed_url)
 chapel_hill_restaurants = resp.json()
 
@@ -919,7 +919,7 @@ print chapel_hill_restaurants.keys()
 As with the Chronacling America API, the top level of the JSON contains some metadata about the search with all the specific items in one field. In this case, `businesses`.
 
 
-```
+```python
 chapel_hill_restaurants['businesses'][1]
 ```
 
@@ -960,7 +960,7 @@ Inspecting the returned results for one restaraunt, it is clear that Yelp is kee
 
 
 
-```
+```python
 print chapel_hill_restaurants['total']
 print len(chapel_hill_restaurants['businesses'])
 ```
@@ -974,7 +974,7 @@ Additionally, they cap the total number of business the search will return at 40
 Even with these restrictions, it still might be useful for social science research. As before, you would likely want to define a function in order to make repeated calls to the API. In this, the easier solution might be to create two functions. One that gets a single page and another which retrieves both pages for a single geographical area by calling the first function twice. While it would be possible to do this with zero or one new functions, creating two functions allows for better control over finding and debugging errors since you can test each function independently. Creating lots of small functions generally the code more readable, especially in case like this where you are looping over pages within restaurants within geographic areas. In general, I think the principle of a workflow consisting of small functions, as is commonly found in Python code, is something that social scientists should adopt even when they aren't writing Python.
 
 
-```
+```python
 def get_yelp_page(location, offset):
     '''
     Retrieve one page of results from the Yelp API
@@ -1018,7 +1018,7 @@ def get_yelp_results(location):
 ```
 
 
-```
+```python
 ch_df = get_yelp_results('Chapel Hill, NC')
 
 print len(ch_df)
@@ -1028,7 +1028,7 @@ print len(ch_df)
 
 
 
-```
+```python
 ch_df.keys()
 ```
 
@@ -1045,7 +1045,7 @@ ch_df.keys()
 
 
 
-```
+```python
 ch_df[['name','categories','review_count','rating']].sort_values(by='rating', ascending=False)
 ```
 
@@ -1346,7 +1346,7 @@ ch_df[['name','categories','review_count','rating']].sort_values(by='rating', as
 The function expects that the first thing you input will be a location. Taking advantage of both `oath2`'s ability to clean up the text so that it is functional when put in a URL (e.g., escape spaces) and Yelp's savvy ability to parse locations, the value for location can be fairly wide (e.g., "Chapel Hill" or "90210"). You can also add a category of business to search for from the [list](http://www.yelp.com/developers/documentation/category_list) of acceptable values. If you don't provide a value, `category_filter = 'restaurants'` provides a default value of 'restaurants'. This function returns the JSON formatted results. Note that this doesn't have any mechanism for handling errors, which will need to happen elsewhere.
 
 
-```
+```python
 chapel_hill_restaurants = get_yelp_businesses('Chapel Hill, NC', 21)
 for business in chapel_hill_restaurants['businesses']:
     print '%s - %s (%s)' % (business['rating'], business['name'], business['review_count'])
@@ -1367,14 +1367,14 @@ for business in chapel_hill_restaurants['businesses']:
 
 
 
-```
+```python
 beverly_hills_restaurants = get_yelp_businesses('90210')
 for business in beverly_hills_restaurants['businesses']:
     print '%s - %s (%s)' % (business['rating'], business['name'], business['review_count'])
 ```
 
 
-```
+```python
 pwd
 ```
 
@@ -1386,6 +1386,6 @@ pwd
 
 
 
-```
+```python
 
 ```
